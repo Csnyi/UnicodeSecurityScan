@@ -93,7 +93,7 @@ Findings are classified by severity.
 | Unexpected control char (`Cc`) | `WARN` | `INFO` | `INFO` |
 | Mixed-script identifier | `ERROR` | `ERROR` | `ERROR` |
 | Non-ASCII identifier | `WARN` | `AUDIT` | `INFO` |
-| Suspicious import path | `ERROR` | — | — |
+| Suspicious import path | `ERROR` | `ERROR` | `n/a` |
 
 ---
 
@@ -150,6 +150,11 @@ python tools/unicode_security_scan.py --json | jq '.findings[] | select(.severit
 ### Human-readable
 
 ```text
+Scanned: /home/user/project
+Include node_modules: no
+Files scanned: 42
+Workers: 8
+
 src/app.js:18:14  [ERROR] [CHAR] ZERO_WIDTH 0x200b ZERO WIDTH SPACE [executable]
     const token​Id = payload.tokenId;
 
@@ -169,6 +174,7 @@ node_modules/html5-qrcode.min.js:1:75335  [INFO] [CHAR] Cc 0x7f UNKNOWN [third_p
 {
   "scanned": "/home/user/project",
   "include_node_modules": false,
+  "files_scanned": 42,
   "blocked": true,
   "summary": {
     "total": 3,
@@ -237,6 +243,8 @@ python tools/unicode_security_scan.py --fail-on project-only
 # Save full results for later review
 python tools/unicode_security_scan.py --include-node-modules --json > unicode-report.json
 ```
+
+The scanner processes files in parallel using a thread pool (`min(16, cpu_count × 2)` workers), so it stays fast even on large repositories.
 
 ---
 

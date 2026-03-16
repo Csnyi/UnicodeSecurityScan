@@ -9,6 +9,7 @@ import re
 import sys
 import unicodedata
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
@@ -565,11 +566,13 @@ def output_json(
     root: str,
     include_node_modules: bool,
     blocked: bool,
+    files_scanned: int,
 ) -> None:
     """Teljes eredményt JSON-ként ír stdout-ra."""
     payload = {
         "scanned":              str(Path(root).resolve()),
         "include_node_modules": include_node_modules,
+        "files_scanned":        files_scanned,
         "blocked":              blocked,
         "summary":              _build_summary_dict(findings),
         "findings":             [finding_to_dict(f) for f in findings],
@@ -664,9 +667,15 @@ def main() -> int:
     args = parse_args()
     root = args.root
 
+    paths = list(iter_files(root, include_node_modules=args.include_node_modules))
+    max_workers = min(16, (os.cpu_count() or 1) * 2)
+
     all_findings: list[Finding] = []
-    for path in iter_files(root, include_node_modules=args.include_node_modules):
-        all_findings.extend(scan_file(path))
+    with ThreadPoolExecutor(max_workers=max_workers) as executor:
+        for findings in executor.map(scan_file, paths):
+            all_findings.extend(findings)
+
+    all_findings.sort(key=lambda f: (f.path, f.line, f.col))
 
     blocked = should_fail(all_findings, args.fail_on)
 
@@ -676,11 +685,14 @@ def main() -> int:
             root=root,
             include_node_modules=args.include_node_modules,
             blocked=blocked,
+            files_scanned=len(paths),
         )
         return 1 if blocked else 0
 
     print(f"Scanned: {Path(root).resolve()}")
     print(f"Include node_modules: {'yes' if args.include_node_modules else 'no'}")
+    print(f"Files scanned: {len(paths)}")
+    print(f"Workers: {max_workers}")
     print()
 
     if not all_findings:

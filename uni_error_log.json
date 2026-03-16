@@ -1,0 +1,59 @@
+{
+  "ERRORS": [
+    {
+      "path": "README.md",
+      "line": 70,
+      "col": 1,
+      "kind": "IDENT",
+      "severity": "ERROR",
+      "risk_profile": "trusted_noise",
+      "details": "MIXED_SCRIPT_IDENTIFIER ['CYRILLIC', 'LATIN']: 'paylоad'",
+      "snippet": "paylоad",
+      "is_minified_like": false
+    },
+    {
+      "path": "README.md",
+      "line": 154,
+      "col": 11,
+      "kind": "IDENT",
+      "severity": "ERROR",
+      "risk_profile": "trusted_noise",
+      "details": "MIXED_SCRIPT_IDENTIFIER ['LATIN', 'OTHER']: 'token\\u200bId'",
+      "snippet": "    const token​Id = payload.tokenId;",
+      "is_minified_like": false
+    },
+    {
+      "path": "README.md",
+      "line": 156,
+      "col": 57,
+      "kind": "IDENT",
+      "severity": "ERROR",
+      "risk_profile": "trusted_noise",
+      "details": "MIXED_SCRIPT_IDENTIFIER ['LATIN', 'OTHER']: 'token\\u200bId'",
+      "snippet": "src/app.js:18:11  [WARN] [IDENT] NON_ASCII_IDENTIFIER: 'token​Id' [executable]",
+      "is_minified_like": false
+    },
+    {
+      "path": "README.md",
+      "line": 157,
+      "col": 11,
+      "kind": "IDENT",
+      "severity": "ERROR",
+      "risk_profile": "trusted_noise",
+      "details": "MIXED_SCRIPT_IDENTIFIER ['LATIN', 'OTHER']: 'token\\u200bId'",
+      "snippet": "    const token​Id = payload.tokenId;",
+      "is_minified_like": false
+    },
+    {
+      "path": "README.md",
+      "line": 191,
+      "col": 29,
+      "kind": "IDENT",
+      "severity": "ERROR",
+      "risk_profile": "trusted_noise",
+      "details": "MIXED_SCRIPT_IDENTIFIER ['LATIN', 'OTHER']: 'token\\u200bId'",
+      "snippet": "      \"snippet\": \"    const token​Id = payload.tokenId;\",",
+      "is_minified_like": false
+    }
+  ]
+}
